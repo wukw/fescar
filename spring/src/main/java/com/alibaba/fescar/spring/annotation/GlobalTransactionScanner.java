@@ -173,6 +173,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator implement
 
     @Override
     protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+        //是否关闭全局事物
         if (disableGlobalTransaction) {
             return bean;
         }
@@ -181,6 +182,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator implement
                 if (PROXYED_SET.contains(beanName)) {
                     return bean;
                 }
+                //获取最原始的类
                 Class<?> serviceInterface = findTargetClass(bean);
                 Method[] methods = serviceInterface.getMethods();
                 LinkedList<MethodDesc> methodDescList = new LinkedList<>();
@@ -190,13 +192,16 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator implement
                         methodDescList.add(makeMethodDesc(anno, method));
                     }
                 }
+                //如果方法上 没有事物注解 直接返回
                 if (methodDescList.isEmpty()) {
                     return bean;
                 }
                 if (interceptor == null) {
                     interceptor = new GlobalTransactionalInterceptor(failureHandlerHook);
                 }
+                //如果不是aop代理
                 if (!AopUtils.isAopProxy(bean)) {
+                    //父类中会调用 getAdvicesAndAdvisorsForBean 这个方法 返回 interceptor 织入到 spring aop 中
                     bean = super.wrapIfNecessary(bean, beanName, cacheKey);
                 } else {
                     AdvisedSupport advised = getAdvisedSupport(bean);
@@ -228,22 +233,29 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator implement
     }
 
     private AdvisedSupport getAdvisedSupport(Object proxy) throws Exception {
-        Field h;
-        if (AopUtils.isJdkDynamicProxy(proxy)) {
-            h = proxy.getClass().getSuperclass().getDeclaredField("h");
-        } else {
-            h = proxy.getClass().getDeclaredField("CGLIB$CALLBACK_0");
-        }
-        h.setAccessible(true);
-        Object dynamicAdvisedInterceptor = h.get(proxy);
-        Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
-        advised.setAccessible(true);
-        return (AdvisedSupport)advised.get(dynamicAdvisedInterceptor);
+    //指向 targetOBJ 的引用
+    Field h;
+    //jdk 字段是h
+    if (AopUtils.isJdkDynamicProxy(proxy)) {
+        h = proxy.getClass().getSuperclass().getDeclaredField("h");
     }
-
+    //cglib 字段是CGLIB$CALLBACK_0
+    else {
+        h = proxy.getClass().getDeclaredField("CGLIB$CALLBACK_0");
+    }
+    //设置字段为private 也可以被找到
+    h.setAccessible(true);
+    //获取原始类
+    Object dynamicAdvisedInterceptor = h.get(proxy);
+    //获取 advised字段
+    Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
+    advised.setAccessible(true);
+    return (AdvisedSupport)advised.get(dynamicAdvisedInterceptor);
+}
+    //在由spring 创建代理类的时候 会调用这个接口 返回自己的advise
     @Override
     protected Object[] getAdvicesAndAdvisorsForBean(Class beanClass, String beanName, TargetSource customTargetSource)
-        throws BeansException {
+            throws BeansException {
         return new Object[] {interceptor};
     }
 
