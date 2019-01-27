@@ -148,6 +148,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator implement
             throw new IllegalArgumentException(
                 "applicationId: " + applicationId + ", txServiceGroup: " + txServiceGroup);
         }
+        // 初始化 TMCLient
         TMClient.init(applicationId, txServiceGroup);
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(
@@ -178,6 +179,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator implement
             return bean;
         }
         try {
+            //串行 维护 PROXYED_SET
             synchronized (PROXYED_SET) {
                 if (PROXYED_SET.contains(beanName)) {
                     return bean;

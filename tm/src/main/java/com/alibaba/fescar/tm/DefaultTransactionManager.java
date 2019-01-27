@@ -62,7 +62,9 @@ public class DefaultTransactionManager implements TransactionManager {
         GlobalBeginRequest request = new GlobalBeginRequest();
         request.setTransactionName(name);
         request.setTimeout(timeout);
+        // 像   server 发送注册 消息
         GlobalBeginResponse response = (GlobalBeginResponse) syncCall(request);
+        // 获取 xid server 服务端返回
         return response.getXid();
     }
 

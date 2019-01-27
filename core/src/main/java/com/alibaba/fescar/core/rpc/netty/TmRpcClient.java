@@ -105,7 +105,7 @@ public final class TmRpcClient extends AbstractRpcRemotingClient {
     }
 
     /**
-     * Gets instance.
+     * Gets instance.  单例
      *
      * @return the instance
      */

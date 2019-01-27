@@ -37,6 +37,9 @@ import java.util.concurrent.Executor;
 
 import com.alibaba.fescar.core.context.RootContext;
 
+/**
+ *  connetion 代理类
+ */
 public abstract class AbstractConnectionProxy implements Connection {
 
     protected DataSourceProxy dataSourceProxy;

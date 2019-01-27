@@ -35,6 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ *
+ * new META-INF/services/  下标识的实体类
+ *
  * @Author: jimin.jm@alibaba-inc.com
  * @Project: fescar-all
  * @DateTime: 2018/10/10 14:28
@@ -51,7 +54,7 @@ public class EnhancedServiceLoader {
     /**
      * 指定classLoader加载server provider
      *
-     * @param service
+     * @param service 文件名为 SERVICES_DIRECTORY + service.getName()
      * @param loader
      * @return
      * @throws EnhancedServiceNotFoundException

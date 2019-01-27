@@ -39,6 +39,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
 
     private TransactionManager transactionManager;
 
+    //全局事物标示
     private String xid;
 
     private GlobalStatus status = GlobalStatus.UnKnown;
@@ -76,11 +77,21 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
         begin(timeout, DEFAULT_GLOBAL_TX_NAME);
     }
 
+    /**
+     *
+     * @param timeout Given timeout in MILLISECONDS.  注解上的 timeout
+     * @param name    Given name.  注解上的name
+     * @throws TransactionException
+     */
     @Override
     public void begin(int timeout, String name) throws TransactionException {
+        //事物发起时 还没有xid role 为 Launcher
         if (xid == null && role == GlobalTransactionRole.Launcher) {
+            //向server 发送 begin 消息 返回xid
             xid = transactionManager.begin(null, null, name, timeout);
+            // 置为 开始状态
             status = GlobalStatus.Begin;
+            // 为线程 设置 xid
             RootContext.bind(xid);
         } else {
             if (xid == null) {

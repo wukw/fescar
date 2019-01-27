@@ -113,6 +113,9 @@ public class DataSourceManager implements ResourceManager {
 
     }
 
+    /**
+     * 单列 静态 内部类写法
+     */
     private static class SingletonHolder {
         private static DataSourceManager INSTANCE = new DataSourceManager();
     }

@@ -25,13 +25,14 @@ public class TransactionalTemplate {
 
     /**
      * Execute object.
+     * 事务执行的模板
      *
      * @param business the business
      * @return the object
      * @throws TransactionalExecutor.ExecutionException the execution exception
      */
     public Object execute(TransactionalExecutor business) throws TransactionalExecutor.ExecutionException {
-
+        //获取 或创建 一个 全局事物
         // 1. get or create a transaction
         GlobalTransaction tx = GlobalTransactionContext.getCurrentOrCreate();
 

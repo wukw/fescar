@@ -18,22 +18,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:jdbc.properties" />
-    </bean>
-
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:jdbc.properties"/>
-    </bean>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <bean name="orderDataSource" class="com.alibaba.druid.pool.DruidDataSource"
           init-method="init" destroy-method="close">
-        <property name="url" value="${jdbc.order.url}"/>
-        <property name="username" value="${jdbc.order.username}"/>
-        <property name="password" value="${jdbc.order.password}"/>
-        <property name="driverClassName" value="${jdbc.order.driver}"/>
+        <property name="url" value="jdbc:mysql://192.168.0.19:3306/ali_order"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="initialSize" value="0"/>
         <property name="maxActive" value="180"/>
         <property name="minIdle" value="0"/>
@@ -59,9 +51,7 @@
     </bean>
 
     <dubbo:application name="dubbo-demo-order-service"/>
-    <dubbo:registry address="multicast://224.5.6.7:1234?unicast=false"/>
-    <!--support zk-->
-    <!--dubbo:registry address="zookeeper://test.zk1.cc:1234?backup=test.zk2.cc:1234,test.zk3.cc:1234" /-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181?unicast=false"/>
     <dubbo:protocol name="dubbo" port="20883"/>
     <dubbo:service interface="com.alibaba.fescar.tm.dubbo.OrderService" ref="service" timeout="10000"/>
 

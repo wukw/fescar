@@ -28,6 +28,7 @@ public class RMClientAT {
         AsyncWorker asyncWorker = new AsyncWorker();
         asyncWorker.init();
         DataSourceManager.init(asyncWorker);
+        //往 client 设置 DataSourceManager
         rmRpcClient.setResourceManager(DataSourceManager.get());
         rmRpcClient.setClientMessageListener(new RmMessageListener(new RMHandlerAT()));
         rmRpcClient.init();

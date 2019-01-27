@@ -71,7 +71,7 @@ public final class RmRpcClient extends AbstractRpcRemotingClient {
     private String applicationId;
 
     private String transactionServiceGroup;
-
+    //单列
     private static volatile RmRpcClient instance;
     private final ConcurrentMap<String, Object> channelLocks = new ConcurrentHashMap<String, Object>();
     private final ConcurrentMap<String, NettyPoolKey> poolKeyMap = new ConcurrentHashMap<String, NettyPoolKey>();
@@ -145,6 +145,7 @@ public final class RmRpcClient extends AbstractRpcRemotingClient {
 
     @Override
     public void init() {
+        //cas 操作
         if (initialized.compareAndSet(false, true)) {
             super.init();
             timerExecutor.scheduleAtFixedRate(new Runnable() {

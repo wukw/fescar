@@ -52,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 继承 netty 的 读写handler
  * The type Abstract rpc remoting.
  *
  * @Author: jimin.jm @alibaba-inc.com

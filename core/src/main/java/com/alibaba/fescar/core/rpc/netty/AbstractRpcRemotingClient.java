@@ -73,8 +73,17 @@ import org.slf4j.LoggerFactory;
  * @FileName: AbstractRpcRemotingClient
  * @Description:
  */
-public abstract class AbstractRpcRemotingClient extends AbstractRpcRemoting
-    implements RemotingService, RegisterMsgListener, ClientMessageSender {
+
+public abstract class AbstractRpcRemotingClient extends
+        // netty 读写通信
+        AbstractRpcRemoting
+    implements
+        // 定义 start shutdown
+        RemotingService,
+        // 定义 注册 成功失败消息接口
+        RegisterMsgListener,
+        // 定义 客户端 发送消息接口
+        ClientMessageSender {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRpcRemotingClient.class);
     private final NettyClientConfig nettyClientConfig;
