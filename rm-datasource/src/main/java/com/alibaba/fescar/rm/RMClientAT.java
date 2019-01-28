@@ -31,6 +31,7 @@ public class RMClientAT {
         //往 client 设置 DataSourceManager
         rmRpcClient.setResourceManager(DataSourceManager.get());
         rmRpcClient.setClientMessageListener(new RmMessageListener(new RMHandlerAT()));
+        //初始化 与 server 的 netty 通信
         rmRpcClient.init();
     }
 }

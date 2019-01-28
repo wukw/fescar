@@ -31,7 +31,12 @@ import com.alibaba.fescar.rm.datasource.sql.druid.MySQLSelectForUpdateRecognizer
 import com.alibaba.fescar.rm.datasource.sql.druid.MySQLUpdateRecognizer;
 
 public class SQLVisitorFactory {
-
+    /**
+     * 识别sql
+     * @param sql
+     * @param dbType
+     * @return
+     */
     public static SQLRecognizer get(String sql, String dbType) {
         List<SQLStatement> asts = SQLUtils.parseStatements(sql, dbType);
         if (asts == null || asts.size() != 1) {
@@ -39,6 +44,7 @@ public class SQLVisitorFactory {
         }
         SQLRecognizer recognizer = null;
         SQLStatement ast = asts.get(0);
+        // 只支持 mysql 数据库
         if (JdbcConstants.MYSQL.equalsIgnoreCase(dbType)) {
             if (ast instanceof SQLInsertStatement) {
                 recognizer = new MySQLInsertRecognizer(sql, ast);

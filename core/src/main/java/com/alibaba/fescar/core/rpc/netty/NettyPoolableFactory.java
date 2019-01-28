@@ -44,6 +44,7 @@ public class NettyPoolableFactory implements KeyedPoolableObjectFactory<NettyPoo
     private final AbstractRpcRemotingClient rpcRemotingClient;
 
     /**
+     * 执行 rpcRemotingClient.start() 初始化与netty的链接
      * Instantiates a new Netty key poolable factory.
      *
      * @param rpcRemotingClient the rpc remoting client

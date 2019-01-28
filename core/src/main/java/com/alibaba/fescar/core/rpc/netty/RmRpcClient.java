@@ -148,6 +148,7 @@ public final class RmRpcClient extends AbstractRpcRemotingClient {
         //cas 操作
         if (initialized.compareAndSet(false, true)) {
             super.init();
+            //执行重连
             timerExecutor.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {

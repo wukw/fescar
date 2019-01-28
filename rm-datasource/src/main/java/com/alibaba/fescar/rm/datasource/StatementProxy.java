@@ -23,6 +23,10 @@ import java.sql.Statement;
 import com.alibaba.fescar.rm.datasource.exec.ExecuteTemplate;
 import com.alibaba.fescar.rm.datasource.exec.StatementCallback;
 
+/**
+ * sql 执行的 代理类
+ * @param <T>
+ */
 public class StatementProxy<T extends Statement> extends AbstractStatementProxy<T> {
 
     public StatementProxy(AbstractConnectionProxy connectionWrapper, T targetStatement, String targetSQL) throws SQLException {

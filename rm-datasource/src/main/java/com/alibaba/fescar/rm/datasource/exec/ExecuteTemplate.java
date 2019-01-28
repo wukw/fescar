@@ -25,7 +25,16 @@ import com.alibaba.fescar.rm.datasource.sql.SQLRecognizer;
 import com.alibaba.fescar.rm.datasource.sql.SQLVisitorFactory;
 
 public class ExecuteTemplate {
-
+    /**
+     *
+     * @param statementProxy
+     * @param statementCallback
+     * @param args 执行的sql
+     * @param <T>
+     * @param <S>
+     * @return
+     * @throws SQLException
+     */
     public static <T, S extends Statement> T execute(StatementProxy<S> statementProxy,
                                                      StatementCallback<T, S> statementCallback,
                                                      Object... args) throws SQLException {
@@ -36,12 +45,12 @@ public class ExecuteTemplate {
                                                      StatementProxy<S> statementProxy,
                                                      StatementCallback<T, S> statementCallback,
                                                      Object... args) throws SQLException {
-
+        // 不是  全局事物
         if (!RootContext.inGlobalTransaction()) {
             // Just work as original statement
             return statementCallback.execute(statementProxy.getTargetStatement(), args);
         }
-
+        // 区分sql 操作 是 del update select insert
         if (sqlRecognizer == null) {
             sqlRecognizer = SQLVisitorFactory.get(
                     statementProxy.getTargetSQL(),

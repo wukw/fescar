@@ -33,6 +33,9 @@ import com.alibaba.fescar.rm.datasource.undo.UndoLogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 数据库链接代理类
+ */
 public class ConnectionProxy extends AbstractConnectionProxy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionProxy.class);

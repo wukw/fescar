@@ -146,11 +146,12 @@ public abstract class AbstractRpcRemotingClient extends
     public void init() {
         NettyPoolableFactory keyPoolableFactory = new NettyPoolableFactory(this);
         nettyClientKeyPool = new GenericKeyedObjectPool(keyPoolableFactory);
+        //设置 netty 配置
         nettyClientKeyPool.setConfig(getNettyPoolConfig());
         serviceManager = new ServiceManagerStaticConfigImpl();
         super.init();
     }
-
+    //启动 与服务端的链接
     @Override
     public void start() {
 
@@ -223,6 +224,7 @@ public abstract class AbstractRpcRemotingClient extends
                     }
                 });
         }
+        //设置 初始化成功
         if (initialized.compareAndSet(false, true) && LOGGER.isInfoEnabled()) {
             LOGGER.info("AbstractRpcRemotingClient has started");
         }
