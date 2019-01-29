@@ -144,6 +144,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
 
     @Override
     public void commit() throws SQLException {
+        //是否开始全局事务
         if (context.inGlobalTransaction()) {
             try {
                 register();
@@ -152,7 +153,9 @@ public class ConnectionProxy extends AbstractConnectionProxy {
             }
 
             try {
-                if (context.hasUndoLog()) { 
+
+                if (context.hasUndoLog()) {
+                    //往数据库里插入 sql执行日志
                     UndoLogManager.flushUndoLogs(this);
                 }
                 targetConnection.commit();
@@ -165,9 +168,11 @@ public class ConnectionProxy extends AbstractConnectionProxy {
                 }
             }
             report(true);
+            //清空connection.context 的上下文
             context.reset();
         	
         } else {
+            //真正提交
             targetConnection.commit();
         }
     }
