@@ -38,6 +38,7 @@ public abstract class AbstractDMLBaseExecutor<T, S extends Statement> extends Ba
     @Override
     public T doExecute(Object... args) throws Throwable {
         AbstractConnectionProxy connectionProxy = statementProxy.getConnectionProxy();
+        //判断是否自动提交
         if (connectionProxy.getAutoCommit()) {
             return executeAutoCommitTrue(args);
         } else {
@@ -45,9 +46,18 @@ public abstract class AbstractDMLBaseExecutor<T, S extends Statement> extends Ba
         }
     }
 
+    /**
+     * 不自动提交
+     * @param args
+     * @return
+     * @throws Throwable
+     */
     protected T executeAutoCommitFalse(Object[] args) throws Throwable {
+        //执行前镜像
         TableRecords beforeImage = beforeImage();
+        //执行目标sql
         T result = statementCallback.execute(statementProxy.getTargetStatement(), args);
+        //执行镜像
         TableRecords afterImage = afterImage(beforeImage);
         statementProxy.getConnectionProxy().prepareUndoLog(sqlRecognizer.getSQLType(), sqlRecognizer.getTableName(), beforeImage, afterImage);
         return result;

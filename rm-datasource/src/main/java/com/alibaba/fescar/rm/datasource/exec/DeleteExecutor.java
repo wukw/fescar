@@ -30,22 +30,36 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 删除执行
+ *      begin  保存表名，查询结果 按删除条件
+ *      after  保存表名
+ * @param <T>
+ * @param <S>
+ */
 public class DeleteExecutor<T, S extends Statement> extends AbstractDMLBaseExecutor<T, S> {
 
     public DeleteExecutor(StatementProxy statementProxy, StatementCallback statementCallback, SQLRecognizer sqlRecognizer) {
         super(statementProxy, statementCallback, sqlRecognizer);
     }
 
+    /**
+     * 获取更新前的数据
+     * @return
+     * @throws SQLException
+     */
     @Override
     protected TableRecords beforeImage() throws SQLException {
         SQLDeleteRecognizer visitor = (SQLDeleteRecognizer) sqlRecognizer;
 
+        //获取表名
         TableMeta tmeta = getTableMeta(visitor.getTableName());
         List<String> columns = new ArrayList<>();
+        //获取表上的所有列
         for (String column : tmeta.getAllColumns().keySet()) {
             columns.add(column);
         }
-
+        //拼接sql SELECT table_name.colums_name1,table_name.colums_name2
         StringBuffer selectSQLAppender = new StringBuffer("SELECT ");
 
         for (int i = 0; i < columns.size(); i++) {
@@ -54,6 +68,7 @@ public class DeleteExecutor<T, S extends Statement> extends AbstractDMLBaseExecu
                 selectSQLAppender.append(", ");
             }
         }
+        //拼接查询条件
         String whereCondition = null;
         ArrayList<Object> paramAppender = new ArrayList<>();
         if (statementProxy instanceof ParametersHolder) {
@@ -61,6 +76,7 @@ public class DeleteExecutor<T, S extends Statement> extends AbstractDMLBaseExecu
         } else {
             whereCondition = visitor.getWhereCondition();
         }
+        //FOR UPDATE  最少是行级锁
         selectSQLAppender.append(" FROM " + getFromTableInSQL() + " WHERE " + whereCondition + " FOR UPDATE");
         String selectSQL = selectSQLAppender.toString();
 
@@ -70,15 +86,18 @@ public class DeleteExecutor<T, S extends Statement> extends AbstractDMLBaseExecu
         ResultSet rs = null;
         try {
             if (paramAppender.isEmpty()) {
+                //直接执行
                 st = statementProxy.getConnection().createStatement();
                 rs = st.executeQuery(selectSQL);
             } else {
+                //预编译执行
                 ps = statementProxy.getConnection().prepareStatement(selectSQL);
                 for (int i = 0; i< paramAppender.size(); i++) {
                     ps.setObject(i + 1, paramAppender.get(i));
                 }
                 rs = ps.executeQuery();
             }
+            //将返回结果拼装成 TableRecords
             beforeImage = TableRecords.buildRecords(tmeta, rs);
 
         } finally {
@@ -95,6 +114,12 @@ public class DeleteExecutor<T, S extends Statement> extends AbstractDMLBaseExecu
         return beforeImage;
     }
 
+    /**
+     * 设置表名
+     * @param beforeImage
+     * @return
+     * @throws SQLException
+     */
     @Override
     protected TableRecords afterImage(TableRecords beforeImage) throws SQLException {
         return TableRecords.empty(getTableMeta());

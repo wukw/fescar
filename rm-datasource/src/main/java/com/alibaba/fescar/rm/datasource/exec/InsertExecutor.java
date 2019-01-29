@@ -40,6 +40,11 @@ public class InsertExecutor<T, S extends Statement> extends AbstractDMLBaseExecu
         super(statementProxy, statementCallback, sqlRecognizer);
     }
 
+    /**
+     * 获取表名
+     * @return
+     * @throws SQLException
+     */
     @Override
     protected TableRecords beforeImage() throws SQLException {
         return TableRecords.empty(getTableMeta());

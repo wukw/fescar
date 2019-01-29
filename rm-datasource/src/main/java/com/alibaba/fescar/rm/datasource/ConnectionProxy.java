@@ -34,6 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ *
+ * 通过 Statement 或者 prepareStatement 执行sql
+ *
+ *
  * 数据库链接代理类
  */
 public class ConnectionProxy extends AbstractConnectionProxy {
@@ -85,7 +89,16 @@ public class ConnectionProxy extends AbstractConnectionProxy {
 
     }
 
+    /**
+     *
+     * @param sqlType      insert upadte del select
+     * @param tableName    表名
+     * @param beforeImage  执行targetsql 镜像
+     * @param afterImage   执行targetsql 镜像
+     * @throws SQLException
+     */
     public void prepareUndoLog(SQLType sqlType, String tableName, TableRecords beforeImage, TableRecords afterImage) throws SQLException {
+        //如果执行前后都没有什么变化 直接返回 select
         if(beforeImage.getRows().size() == 0 && afterImage.getRows().size() == 0) {
             return;
             }
@@ -108,15 +121,15 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         sqlUndoLog.setAfterImage(afterImage);
         return sqlUndoLog;
     }
-
+    //表名 和 字段的 拼接
     private String buildLockKey(TableRecords rowsIncludingPK) {
         if (rowsIncludingPK.size() == 0) {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(rowsIncludingPK.getTableMeta().getTableName());
         sb.append(":");
 
+        sb.append(rowsIncludingPK.getTableMeta().getTableName());
         boolean flag = false;
         for (Field field : rowsIncludingPK.pkRows()) {
             if (flag) {

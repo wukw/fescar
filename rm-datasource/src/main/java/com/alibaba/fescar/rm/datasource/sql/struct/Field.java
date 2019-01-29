@@ -20,13 +20,13 @@ package com.alibaba.fescar.rm.datasource.sql.struct;
  * Field
  */
 public class Field {
-
+	//字段名
 	public String name;
 
 	private KeyType keyType = KeyType.NULL;
 
 	public int type;
-
+	//字段值
 	public Object value;
 
 	public Field() {

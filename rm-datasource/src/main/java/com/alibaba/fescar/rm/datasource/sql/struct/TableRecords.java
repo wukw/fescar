@@ -95,6 +95,11 @@ public class TableRecords {
         return tableMeta;
     }
 
+    /**
+     * 设置表名
+     * @param tableMeta
+     * @return
+     */
     public static TableRecords empty(TableMeta tableMeta) {
         return new TableRecords(tableMeta) {
             @Override
@@ -119,6 +124,13 @@ public class TableRecords {
         };
     }
 
+    /**
+     *
+     * @param tmeta  表的数据
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     public static TableRecords buildRecords(TableMeta tmeta, ResultSet resultSet) throws SQLException {
         TableRecords records = new TableRecords(tmeta);
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();

@@ -43,6 +43,12 @@ public abstract class BaseTransactionalExecutor<T, S extends Statement> implemen
         this.sqlRecognizer = sqlRecognizer;
     }
 
+    /**
+     * bind xid 全局事物标示
+     * @param args sql 语句
+     * @return
+     * @throws Throwable
+     */
     @Override
     public Object execute(Object... args) throws Throwable {
         String xid = RootContext.getXID();
@@ -64,6 +70,11 @@ public abstract class BaseTransactionalExecutor<T, S extends Statement> implemen
         return whereConditionAppender.toString();
     }
 
+    /**
+     * 拼接表名 +'.'+ 列名
+     * @param columnName
+     * @return
+     */
     protected String getColumnNameInSQL(String columnName) {
         String tableAlias = sqlRecognizer.getTableAlias();
         if (tableAlias == null) {
