@@ -160,6 +160,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
                 }
                 targetConnection.commit();
             } catch (Throwable ex) {
+                //发送报告失败
                 report(false);
                 if (ex instanceof SQLException) {
                     throw (SQLException) ex;
@@ -167,6 +168,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
                     throw new SQLException(ex);
                 }
             }
+            //发送报告成功
             report(true);
             //清空connection.context 的上下文
             context.reset();
@@ -177,6 +179,10 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         }
     }
 
+    /**
+     * 产生一个分支id
+     * @throws TransactionException
+     */
     private void register() throws TransactionException {
         Long branchId = DataSourceManager.get().branchRegister(BranchType.AT, getDataSourceProxy().getResourceId(),
                 null, context.getXid(), context.buildLockKeys());

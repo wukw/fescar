@@ -79,7 +79,7 @@ public class DataSourceManager implements ResourceManager {
             request.setBranchId(branchId);
             request.setStatus(status);
             request.setApplicationData(applicationData);
-
+            //向服务器发送报告
             BranchReportResponse response = (BranchReportResponse) RmRpcClient.getInstance().sendMsgWithResponse(request);
             if (response.getResultCode() == ResultCode.Failed) {
                 throw new TransactionException(response.getTransactionExceptionCode(), "Response[" + response.getMsg() + "]");

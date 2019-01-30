@@ -67,7 +67,7 @@ public final class UndoLogManager {
         branchUndoLog.setXid(xid);
         branchUndoLog.setBranchId(branchID);
         branchUndoLog.setSqlUndoLogs(connectionContext.getUndoItems());
-
+        //json 格式化
         String undoLogContent = UndoLogParserFactory.getInstance().encode(branchUndoLog);
 
         if (LOGGER.isDebugEnabled()) {

@@ -57,7 +57,7 @@ public abstract class AbstractDMLBaseExecutor<T, S extends Statement> extends Ba
         TableRecords beforeImage = beforeImage();
         //执行目标sql
         T result = statementCallback.execute(statementProxy.getTargetStatement(), args);
-        //执行镜像
+        //执行后镜像
         TableRecords afterImage = afterImage(beforeImage);
         statementProxy.getConnectionProxy().prepareUndoLog(sqlRecognizer.getSQLType(), sqlRecognizer.getTableName(), beforeImage, afterImage);
         return result;

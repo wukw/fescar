@@ -91,6 +91,7 @@ public class DeleteExecutor<T, S extends Statement> extends AbstractDMLBaseExecu
                 rs = st.executeQuery(selectSQL);
             } else {
                 //预编译执行
+                //TODO：可能涉及到分支合并??
                 ps = statementProxy.getConnection().prepareStatement(selectSQL);
                 for (int i = 0; i< paramAppender.size(); i++) {
                     ps.setObject(i + 1, paramAppender.get(i));
